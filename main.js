@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initIPJourney();
   initCaseStudies();
   initScrollReveal();
+  initVideoScroll();
   initNewsletterForm();
   initBackToTop();
   initAccordions();
@@ -22,19 +23,20 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function initStickyHeader() {
   const header = document.getElementById('header');
-  if (!header) return;
+  const hero = document.getElementById('hero');
+  if (!header || !hero) return;
 
-  const handleScroll = () => {
-    if (window.scrollY > 30) {
+  function updateHeader() {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    if (heroBottom <= 0) {
       header.classList.add('stuck');
     } else {
       header.classList.remove('stuck');
     }
-  };
+  }
 
-  window.addEventListener('scroll', handleScroll);
-  // Run on initial load in case page is already scrolled
-  handleScroll();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
 }
 
 /**
@@ -1145,3 +1147,53 @@ function initSubpageSidebar() {
   highlightActiveLink(); // Run once initially
 }
 
+/**
+ * GSAP Scroll-Driven Video
+ */
+function initVideoScroll() {
+  const canvas = document.getElementById('hero-canvas');
+  const hero = document.getElementById('hero');
+  const overlay = document.querySelector('.hero-overlay');
+  const content = document.querySelector('.hero-content');
+  if (!canvas || !hero) return;
+
+  const ctx = canvas.getContext('2d');
+  const totalFrames = 164;
+  const frames = [];
+  let currentFrame = 0;
+
+  for (let i = 1; i <= totalFrames; i++) {
+    const img = new Image();
+    img.src = `frames/ezgif-frame-${String(i).padStart(3, '0')}.jpg`;
+    frames.push(img);
+  }
+
+  window.addEventListener('scroll', () => {
+    const heroTop = hero.getBoundingClientRect().top + window.scrollY;
+    const heroHeight = hero.offsetHeight - window.innerHeight;
+    const scrolled = window.scrollY - heroTop;
+    const progress = Math.max(0, Math.min(1, scrolled / heroHeight));
+
+    // Update canvas frame
+    const frameIndex = Math.floor(progress * (totalFrames - 1));
+    if (frameIndex !== currentFrame && frames[frameIndex]?.complete) {
+      currentFrame = frameIndex;
+      ctx.drawImage(frames[frameIndex], 0, 0, canvas.width, canvas.height);
+    }
+
+    // Hide overlay and content when hero is out of view
+    const heroRect = hero.getBoundingClientRect();
+    const heroVisible = heroRect.bottom > 0 && heroRect.top < window.innerHeight;
+    if (overlay) overlay.style.display = heroVisible ? 'block' : 'none';
+    if (content) content.style.display = heroVisible ? 'flex' : 'none';
+
+    // Fade out near end of hero
+    const fadeProgress = Math.max(0, (progress - 0.8) / 0.2);
+    if (overlay) overlay.style.opacity = 1 - fadeProgress;
+    if (content) content.style.opacity = 1 - fadeProgress;
+  });
+
+  frames[0].onload = () => {
+    ctx.drawImage(frames[0], 0, 0, canvas.width, canvas.height);
+  };
+}
