@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -17,7 +17,7 @@ Format: [Date] - [Version] - [Type]
 
 ### Added
 - **Full Client Site Coverage**: Audited `excelonip.com` via its Yoast sitemaps (~200 URLs) and rebuilt every main page section as static HTML.
-  - **22 Sub-Service Micro-Pages**: Patent (search, drafting, filing, prosecution, opposition, licensing, valuation, analytics, PCT), Trademark (search, filing, prosecution, watch/monitoring, opposition, licensing, valuation), Copyright (filing, enforcement, commercialization), Design (filing, protection/opposition, commercialization/valuation) — all with client copy preserved from the live pages and the shared 30/70 sticky-sidebar layout.
+  - **22 Sub-Service Micro-Pages**: Patent (search, drafting, filing, prosecution, opposition, licensing, valuation, analytics, PCT), Trademark (search, filing, prosecution, watch/monitoring, opposition, licensing, valuation), Copyright (filing, enforcement, commercialization), Design (filing, protection/opposition, commercialization/valuation) â€” all with client copy preserved from the live pages and the shared 30/70 sticky-sidebar layout.
   - **Legal/Litigation Support (`legal-litigation-support.html`)**: New service page mirroring the August 2026 addition on the live site; linked from the global Services dropdown and the Legal Support landing.
   - **Associates (`associates.html`)**: Partner network grid with 16 institution logos hotlinked from the client CDN.
   - **Accolades (`achievement.html`)**: Photo gallery (~62 event/certificate images) using WordPress thumbnail variants.
