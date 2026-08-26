@@ -6,6 +6,13 @@ Format: [Date] - [Version] - [Type]
 
 ---
 
+## [1.7.1] - 2026-08-26
+
+### Changed
+- **Navbar Parity with Live Site (all HTML files)**: Rebuilt the top-level navigation to mirror `excelonip.com` exactly: Services (dropdown), About, Case Study (dropdown), Associates, Blog, Careers, Accolades, Contact. Removed the crowded IP Matchmaker and IP Journey top-level nav items (both sections remain accessible on the homepage) and renamed "About Us" / "Case Studies" labels to "About" / "Case Study" for label parity.
+
+---
+
 ## [1.7.0] - 2026-08-26
 
 ### Added
