@@ -591,59 +591,45 @@ ul {
 /* Hero Section */
 .hero {
   position: relative;
-  width: 100vw;
-  height: 600vh;
-  margin-left: calc(-50vw + 50%);
-  overflow: clip;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   color: var(--color-white);
   text-align: center;
 }
 
 .hero-video-bg {
-  position: sticky;
+  position: absolute;
   top: 0;
+  left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   object-fit: cover;
-  display: block;
-}
-
-#hero-canvas {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  display: block;
-  filter: contrast(1.1) saturate(1.2) brightness(1.05);
+  z-index: 1;
 }
 
 .hero-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: rgba(15, 23, 42, 0.72); /* Dim overlay significantly for busyness of video graphics */
   z-index: 2;
-  pointer-events: none;
 }
 
 .hero-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 800px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  position: relative;
   z-index: 3;
+  max-width: 800px;
   padding: 0 24px;
-  text-align: center;
+  transform: translateY(20px);
+  opacity: 0;
+  animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 200ms;
 }
 
 @keyframes heroReveal {
