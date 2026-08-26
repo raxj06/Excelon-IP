@@ -79,7 +79,7 @@ d:\Boostify Corp\Exelon IP/
 ## Key Components
 ### Header / Navigation
 - **Location**: All HTML files (Header)
-- **Purpose**: Sticky header containing the brand SVG logo, multi-level hover menus, contact links, and a call-to-action button. Includes mobile hamburger trigger. Features a compact hierarchical flyout dropdown menu on desktop (revealing subpages via side hover transitions) and click-triggered subcategory accordions inside the mobile navigation drawer.
+- **Purpose**: Sticky header containing the brand SVG logo, multi-level hover menus, contact links, and a call-to-action button. Top-level items mirror the live site: Services (flyout dropdown), About, Case Study (dropdown), Associates, Blog (external), Careers, Accolades, Contact. Includes mobile hamburger trigger. Features a compact hierarchical flyout dropdown menu on desktop (revealing subpages via side hover transitions) and click-triggered subcategory accordions inside the mobile navigation drawer.
 
 ### IP Services Dashboard & Detailed Pages
 - **Location**: `intellectual-property-services.html` (landing dashboard), `*-services.html` and `design-service.html` (detailed subpages).
