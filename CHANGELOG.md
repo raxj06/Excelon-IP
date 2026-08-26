@@ -6,6 +6,27 @@ Format: [Date] - [Version] - [Type]
 
 ---
 
+## [1.7.0] - 2026-08-26
+
+### Added
+- **Full Client Site Coverage**: Audited `excelonip.com` via its Yoast sitemaps (~200 URLs) and rebuilt every main page section as static HTML.
+  - **22 Sub-Service Micro-Pages**: Patent (search, drafting, filing, prosecution, opposition, licensing, valuation, analytics, PCT), Trademark (search, filing, prosecution, watch/monitoring, opposition, licensing, valuation), Copyright (filing, enforcement, commercialization), Design (filing, protection/opposition, commercialization/valuation) — all with client copy preserved from the live pages and the shared 30/70 sticky-sidebar layout.
+  - **Legal/Litigation Support (`legal-litigation-support.html`)**: New service page mirroring the August 2026 addition on the live site; linked from the global Services dropdown and the Legal Support landing.
+  - **Associates (`associates.html`)**: Partner network grid with 16 institution logos hotlinked from the client CDN.
+  - **Accolades (`achievement.html`)**: Photo gallery (~62 event/certificate images) using WordPress thumbnail variants.
+  - **Legal Pages (`terms-and-conditions.html`, `privacy-policy.html`)**: Live legal copy mirrored locally; footer bottom links switched from external to local.
+  - **City Coverage Template (`ip-locations.html` + `locations-data.js`)**: One client-side rendered template covering all 21 Gujarat city SEO pages via `?city=<slug>` with sidebar city chips and templated intro copy.
+
+### Changed
+- **Global Navigation (all HTML files)**: Added Associates, Accolades, and Blog (external link to live blog) top-level nav items; added "Legal/Litigation Support Services" to the Legal Support dropdown flyout.
+- **Footer Quick Links (all HTML files)**: Added Associates, Accolades, Blog, and Service Locations entries.
+- **Service Hub Pages**: Patent, Trademark, Copyright, Design, and Legal Support landings now include a sub-service quick-links block linking into their micro-pages.
+
+### Removed
+- **Standalone Bundles**: Deleted all tracked `*_single.html` distribution bundles (28 files). The site ships as plain multi-page static HTML only; the bundler scripts no longer exist.
+
+---
+
 ## [1.5.0] - 2026-05-27
 
 ### Added
