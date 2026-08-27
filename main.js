@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initCareersForm();
   initSubpageSidebar();
+  initEngagementCTA();
 });
 
 /**
@@ -1143,5 +1144,177 @@ function initSubpageSidebar() {
 
   window.addEventListener('scroll', highlightActiveLink);
   highlightActiveLink(); // Run once initially
+}
+
+/**
+ * Engagement Layer: Sticky Consultation Bar + Scroll/Exit-Intent Modal
+ * Injects markup site-wide (all pages load main.js) so no per-page HTML edits are needed.
+ * Non-blocking: never traps the user, closes on Esc/backdrop/close button, shows once per session.
+ */
+function initEngagementCTA() {
+  const PHONE_DISPLAY = '+91-9512332604';
+  const PHONE_HREF = 'tel:+919512332604';
+  const WHATSAPP_HREF = 'https://wa.me/919512332604?text=Hello%20EXCELON%20IP%2C%20I%27d%20like%20a%20free%20consultation.';
+  const SESSION_KEY = 'excelonip_consult_modal_shown';
+
+  injectStickyBar();
+  injectModal();
+
+  const stickyBar = document.getElementById('sticky-consult-bar');
+  const modal = document.getElementById('consult-modal');
+  if (!stickyBar || !modal) return;
+
+  const modalForm = modal.querySelector('#consult-modal-form');
+  const modalStatus = modal.querySelector('#consult-modal-status');
+  const closeButtons = modal.querySelectorAll('[data-modal-close]');
+
+  function openModal() {
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+    modal.classList.add('active');
+    document.body.classList.add('no-scroll');
+    sessionStorage.setItem(SESSION_KEY, '1');
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  }
+
+  closeButtons.forEach((btn) => btn.addEventListener('click', closeModal));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+
+  // Sticky bar: reveal after scrolling past the hero / first viewport
+  const revealStickyBar = () => {
+    if (window.scrollY > 400) {
+      stickyBar.classList.add('visible');
+      document.body.classList.add('has-sticky-consult-bar');
+    } else {
+      stickyBar.classList.remove('visible');
+      document.body.classList.remove('has-sticky-consult-bar');
+    }
+  };
+  window.addEventListener('scroll', revealStickyBar);
+  revealStickyBar();
+
+  // Scroll-depth trigger: open modal once user reaches ~55% of page height
+  const scrollDepthTrigger = () => {
+    if (sessionStorage.getItem(SESSION_KEY)) {
+      window.removeEventListener('scroll', scrollDepthTrigger);
+      return;
+    }
+    const scrollDepth = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if (scrollDepth > 0.55) {
+      openModal();
+      window.removeEventListener('scroll', scrollDepthTrigger);
+    }
+  };
+  window.addEventListener('scroll', scrollDepthTrigger);
+
+  // Exit-intent trigger (desktop): mouse leaves toward the top of the viewport
+  document.addEventListener('mouseout', (e) => {
+    if (sessionStorage.getItem(SESSION_KEY)) return;
+    if (e.clientY <= 0 && !e.relatedTarget) {
+      openModal();
+    }
+  });
+
+  // Lead form validation + mock submit (mirrors newsletter/contact form pattern)
+  if (modalForm) {
+    modalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      modalStatus.className = 'form-message';
+      modalStatus.textContent = '';
+
+      const nameVal = modalForm.querySelector('[name="name"]').value.trim();
+      const phoneVal = modalForm.querySelector('[name="phone"]').value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?[0-9]{10,13}$/;
+      const emailInput = modalForm.querySelector('[name="email"]');
+      const emailVal = emailInput.value.trim();
+
+      if (!nameVal || !phoneVal || !emailVal) {
+        modalStatus.textContent = 'Please fill in all fields.';
+        modalStatus.classList.add('error');
+        return;
+      }
+      if (!emailRegex.test(emailVal)) {
+        modalStatus.textContent = 'Please enter a valid email address.';
+        modalStatus.classList.add('error');
+        return;
+      }
+      if (!phoneRegex.test(phoneVal.replace(/[\s-]/g, ''))) {
+        modalStatus.textContent = 'Please enter a valid phone number.';
+        modalStatus.classList.add('error');
+        return;
+      }
+
+      modalStatus.textContent = 'Thank you! Our team will call you back shortly.';
+      modalStatus.classList.add('success');
+      modalForm.reset();
+      setTimeout(closeModal, 1800);
+    });
+  }
+
+  function injectStickyBar() {
+    if (document.getElementById('sticky-consult-bar')) return;
+    const bar = document.createElement('div');
+    bar.id = 'sticky-consult-bar';
+    bar.className = 'sticky-consult-bar';
+    bar.innerHTML = `
+      <div class="sticky-consult-inner">
+        <span class="sticky-consult-text">Protect your idea before someone else files it.</span>
+        <div class="sticky-consult-actions">
+          <a href="${PHONE_HREF}" class="sticky-consult-link" aria-label="Call Excelon IP">${PHONE_DISPLAY}</a>
+          <button type="button" class="btn btn-gold sticky-consult-btn" data-open-consult-modal>Book Free Consultation</button>
+        </div>
+      </div>`;
+    document.body.appendChild(bar);
+    bar.querySelector('[data-open-consult-modal]').addEventListener('click', () => {
+      document.getElementById('consult-modal').classList.add('active');
+      document.body.classList.add('no-scroll');
+      sessionStorage.setItem(SESSION_KEY, '1');
+    });
+  }
+
+  function injectModal() {
+    if (document.getElementById('consult-modal')) return;
+    const modalEl = document.createElement('div');
+    modalEl.id = 'consult-modal';
+    modalEl.className = 'consult-modal';
+    modalEl.innerHTML = `
+      <div class="consult-modal-card" role="dialog" aria-modal="true" aria-labelledby="consult-modal-title">
+        <button type="button" class="consult-modal-close" data-modal-close aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <div class="consult-modal-side">
+          <span class="consult-modal-eyebrow">Free 15-Minute Call</span>
+          <h3 id="consult-modal-title" class="consult-modal-title">Talk to an IP Attorney before your filing window closes</h3>
+          <p class="consult-modal-desc">Patents and trademarks are time-sensitive. Get a quick assessment of your novelty, filing risk, and next steps at no cost.</p>
+          <a href="${WHATSAPP_HREF}" target="_blank" rel="noopener" class="consult-modal-whatsapp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Or message us on WhatsApp
+          </a>
+        </div>
+        <form class="consult-modal-form" id="consult-modal-form">
+          <div class="form-group">
+            <input type="text" name="name" class="form-input" placeholder="Full Name*" required>
+          </div>
+          <div class="form-group">
+            <input type="tel" name="phone" class="form-input" placeholder="Phone Number*" required>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" class="form-input" placeholder="Email Address*" required>
+          </div>
+          <button type="submit" class="btn btn-primary consult-modal-submit">Request Callback</button>
+          <div class="form-message" id="consult-modal-status"></div>
+        </form>
+      </div>`;
+    document.body.appendChild(modalEl);
+  }
 }
 

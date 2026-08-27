@@ -1626,6 +1626,229 @@ ul {
 }
 
 /* ==========================================================================
+   Engagement Layer: Sticky Consultation Bar + Consultation Modal
+   Injected site-wide by main.js (initEngagementCTA) on every page.
+   ========================================================================== */
+
+.sticky-consult-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 997;
+  background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-primary-deep) 100%);
+  box-shadow: 0 -8px 24px rgba(15, 43, 61, 0.18);
+  transform: translateY(100%);
+  transition: transform var(--transition-slow);
+}
+
+.sticky-consult-bar.visible {
+  transform: translateY(0);
+}
+
+.sticky-consult-inner {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 24px;
+}
+
+.sticky-consult-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.sticky-consult-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.sticky-consult-link {
+  color: var(--color-white);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.sticky-consult-link:hover {
+  color: var(--color-gold);
+}
+
+.sticky-consult-btn {
+  white-space: nowrap;
+}
+
+/* Lift the floating widgets above the sticky consult bar so they never overlap */
+body.has-sticky-consult-bar .whatsapp-widget,
+body.has-sticky-consult-bar .back-to-top {
+  bottom: 76px;
+}
+
+@media (max-width: 768px) {
+  body.has-sticky-consult-bar .whatsapp-widget,
+  body.has-sticky-consult-bar .back-to-top {
+    bottom: 68px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sticky-consult-text {
+    display: none;
+  }
+
+  .sticky-consult-inner {
+    padding: 12px 16px;
+    justify-content: center;
+  }
+
+  .sticky-consult-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Consultation Modal */
+.consult-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(9, 20, 27, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.consult-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.consult-modal-card {
+  position: relative;
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 760px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.97);
+  transition: transform var(--transition-normal);
+  max-height: 90vh;
+}
+
+.consult-modal.active .consult-modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.consult-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: all var(--transition-fast);
+}
+
+.consult-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.consult-modal-side {
+  background: linear-gradient(160deg, var(--color-navy) 0%, var(--color-primary-deep) 100%);
+  color: var(--color-white);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.consult-modal-eyebrow {
+  display: inline-block;
+  color: var(--color-gold);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+}
+
+.consult-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 14px;
+}
+
+.consult-modal-desc {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.consult-modal-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #4ade80;
+  font-size: 0.85rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.consult-modal-whatsapp:hover {
+  color: #86efac;
+}
+
+.consult-modal-form {
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+
+.consult-modal-submit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .consult-modal-card {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .consult-modal-side {
+    padding: 32px 24px;
+  }
+
+  .consult-modal-form {
+    padding: 28px 24px;
+  }
+}
+
+/* ==========================================================================
    Interactive IP Journey Stepper
    ========================================================================== */
 
