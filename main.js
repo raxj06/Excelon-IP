@@ -62,6 +62,11 @@ function initMobileMenu() {
     e.stopPropagation();
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('open');
+    // Force a synchronous reflow before the browser paints so the drawer's
+    // clipped layout (width/overflow) is fully settled on the very first
+    // open -- avoids a first-click compositing glitch where dropdown text
+    // briefly renders unclipped/overlapping.
+    void navMenu.offsetHeight;
     if (header) header.classList.toggle('menu-open');
     if (overlay) overlay.classList.toggle('active');
     
@@ -84,6 +89,7 @@ function initMobileMenu() {
           e.preventDefault();
           e.stopPropagation();
           item.classList.toggle('active-mobile');
+          void navMenu.offsetHeight;
         }
       });
     }
